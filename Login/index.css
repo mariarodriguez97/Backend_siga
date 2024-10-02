@@ -1,0 +1,112 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.contenedor{
+    display: flex;
+    height: 100%;
+}
+
+.contenedor .imagen{
+    display: flex;
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    justify-content: right;
+    
+} 
+
+img{
+    width: 70vh;
+    height: 25vh;
+}
+
+h1{
+    font-size: 35px;
+    padding: 70px 10px;
+    padding-top: 140px;
+    color: black;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Contenedor del login con margen */
+.login-container {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+
+/* Estilos para los botones de las pestañas */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: #3aa9cb;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.tab-button:hover {
+    background-color: #0f7eaa;
+}
+
+/* Ocultar el contenido de las pestañas */
+.tab-content {
+    display: none;
+}
+
+/* Mostrar el contenido activo */
+.tab-content.active {
+    display: block;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label, input {
+    margin-bottom: 10px;
+}
+
+input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #3aa9cb;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #0f7eaa;
+}

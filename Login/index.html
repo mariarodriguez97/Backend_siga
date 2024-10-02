@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="../Login/index.css">
+</head>
+<body>
+    <div class="contenedor">
+
+        <div class="imagen">
+            <img src="../imgenes/Banner SIGA.png">
+        </div>
+
+        <div class="ingreso">
+            <h1>Sistema de ingreso general académico <br> SIGA</h1>
+            <div class="login-container">
+                <div class="tabs">
+                    <button class="tab-button" onclick="openTab('admin')">Admin</button>
+                    <button class="tab-button" onclick="openTab('docente')">Docente</button>
+                </div>
+            
+                <div id="admin" class="tab-content">
+                    <form action="../Admin/index.html">
+                        <label for="admin-username">Administrador:</label>
+                        <input type="text" id="admin-username" name="admin-username" required>
+            
+                        <label for="admin-password">Contraseña:</label>
+                        <input type="password" id="admin-password" name="admin-password" required>
+            
+                        <button type="submit">Ingresar</button>
+                    </form>
+                </div>
+            
+                <div id="docente" class="tab-content" style="display:none;">
+                    <form action="../Profesor/index.html">
+                        <label for="docente-username">Usuario:</label>
+                        <input type="text" id="docente-username" name="docente-username" required>
+            
+                        <label for="docente-password">Contraseña:</label>
+                        <input type="password" id="docente-password" name="docente-password" required>
+            
+                        <button type="submit">Ingresar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../Login/scripts.js"></script>
+</body>
+</html>
