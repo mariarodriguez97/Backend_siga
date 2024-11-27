@@ -12,7 +12,7 @@
 <form action="Ejecutar.php" method="POST">
 <input type="hidden" name="accion" value="editar">
 
-<label for="id_docente">Ingrese el ID del Docente del cual desea actualizar los datos:</label><br>
+<label for="id_docente">Ingrese el ID del pinche Docente del cual desea actualizar los datos:</label><br>
 <input type="number" id="id_docente" name="id_docente" required><br>
 
 <label for="id_docente">Ingrese el nuevo Nombre para el Docente seleccionado:</label><br>
