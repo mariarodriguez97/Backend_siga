@@ -54,7 +54,13 @@ $docentes=$stmt->fetchAll();
                         data-apellido='" . $row['Apellido_Docente'] . "'>
                         Editar
                     </button>
-                    <button class='btn btn-danger'>Eliminar</button>
+                    <button class='btn btn-danger'
+                    data-bs-toggle='modal'
+                    data-bs-target='#desactivarModal'
+                    data-id='".$row['ID_Docente']."'
+                    data-nombre='" .$row['Nombre_Docente'] ."'
+                    data-apellido='". $row['Apellido_Docente'] ."'> 
+                    Desactivar</button>
                 </td>
             </tr>";
         }
