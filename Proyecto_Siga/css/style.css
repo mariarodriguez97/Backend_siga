@@ -1,0 +1,101 @@
+:root {
+    --color-barra-lateral: rgb(44, 45, 49);
+    --color-texto: rgb(255, 255, 255);
+    --color-texto-menu: rgb(146, 142, 142);
+    --color-boton: rgb(255, 255, 255);
+    --color-boton-texto: rgb(0, 0, 0);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Corregido */
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Evita desbordamiento global */
+}
+
+.layout {
+    display: flex;
+    flex-direction: row; /* Elementos alineados horizontalmente */
+    height: 100vh; /* Asegura que todo ocupe el alto completo */
+}
+
+.barra-lateral {
+    width: 250px; 
+    padding: 20px 15px;
+    height: 100%;
+    overflow: hidden;
+    background-color:var(--color-barra-lateral);
+    transition: width 0.5s ease;
+    flex-shrink: 0; /* Evita que se reduzca al usar flexbox */
+}
+
+.mini-barra-lateral {
+    width: 80px;
+}
+
+.barra-lateral span {
+    font-size: 18px;
+    text-align: left;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.barra-lateral span.oculto {
+    opacity: 0;
+}
+
+.barra-lateral .nombre-pagina {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    margin-bottom: 40px;
+    align-items: center;
+    color: var(--color-texto);
+}
+
+.barra-lateral .nombre-pagina ion-icon {
+    min-width: 50px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.barra-lateral .nombre-pagina span {
+    font-size: 25px;
+    margin-left: 5px;
+}
+
+/* Menú de navegación */
+.barra-lateral .navegacion li {
+    list-style: none;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.barra-lateral .navegacion a {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 10px;
+    background-color: var(--color-barra-lateral);
+    color: var(--color-texto-menu);
+}
+
+.barra-lateral .navegacion ion-icon {
+    min-width: 30px;
+    font-size: 40px;
+}
+
+.content {
+    flex-grow: 1; /* Ocupa el espacio restante */
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    overflow-y: auto;
+}
