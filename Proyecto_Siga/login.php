@@ -13,10 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Consultar el usuario en la base de datos
-    $sql = "SELECT u.ID_Usuario, u.estado, u.id_rol, d.Contraseña_Docente 
-            FROM Usuario u
-            INNER JOIN Docente d ON u.ID_Usuario = d.ID_Usuario
-            WHERE d.Correo_Docente = :usuario AND u.estado = 1";
+    $sql = "SELECT ID_Usuario, estado, id_rol, Contraseña 
+            FROM Usuario 
+            WHERE Correo = :usuario AND estado = 1";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':usuario', $usuario, PDO::PARAM_STR);
     $stmt->execute();
@@ -24,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuarioDb = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Verificar si el usuario existe y la contraseña es correcta
-    if ($usuarioDb && password_verify($contrasena, $usuarioDb['Contraseña_Docente'])) {
+    if ($usuarioDb && password_verify($contrasena, $usuarioDb['Contraseña'])) {
         // Autenticación exitosa: iniciamos sesión
         $_SESSION['user_id'] = $usuarioDb['ID_Usuario'];
         $_SESSION['usuario'] = $usuario;

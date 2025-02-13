@@ -1,39 +1,42 @@
 <?php
-require_once __DIR__ . '/../crud/conexion.php';
+require 'conexion.php';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id_docente = $_POST['editar-id'];
+    $id_usuario = $_POST['editar-usuario'];
+    $nombre = $_POST['editar-nombre'];
+    $apellido = $_POST['editar-apellido'];
+    $correo = $_POST['editar-correo'];
+    $password = $_POST['editar-password'];
 
-if($_SERVER['REQUEST_METHOD']==='POST'){
-    $Nuevo_Nombre=$_POST['editar-nombre']??'';
-    $Nuevo_Apellido=$_POST['editar-apellido']??'';
-    $ID_Docente = $_POST['id'] ?? '';
+    try {
+        $pdo->beginTransaction();
 
-    if (empty($Nuevo_Nombre) || empty($Nuevo_Apellido)) {
-        die('Error: Los nuevos nombres y apellidos son obligatorios.');
-    }
+        // Actualizar datos en la tabla Docente
+        $sql = "UPDATE Docente SET Nombre_Docente = ?, Apellido_Docente = ? WHERE ID_Docente = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$nombre, $apellido, $id_docente]);
 
+        // Actualizar correo en la tabla Usuario
+        $sql = "UPDATE Usuario SET Correo = ? WHERE ID_Usuario = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$correo, $id_usuario]);
 
-try{
-    $pdo->beginTransaction();
-
-    $query="UPDATE docente SET nombre_docente=:nombre, apellido_docente=:apellido WHERE  ID_Docente=:ID_Docente";
-    $stmt = $pdo->prepare($query);
-
-    $stmt->bindParam(':ID_Docente',$ID_Docente);
-    $stmt->bindParam(':nombre', $Nuevo_Nombre);
-    $stmt->bindParam(':apellido', $Nuevo_Apellido);
-    
-    $stmt->execute();
+        // Si el usuario ingresó una nueva contraseña, la actualizamos
+        if (!empty($password)) {
+            $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+            $sql = "UPDATE Usuario SET Contraseña = ? WHERE ID_Usuario = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$password_hashed, $id_usuario]);
+        }
 
         $pdo->commit();
-
-
-        header('Location: ../InicioAdmin.php');
-        exit(); // 
-
-    } catch (PDOException $e) {
-        $pdo->rollBack(); // Revertir la transacción en caso de error
-        die('Error al crear el docente: ' . $e->getMessage());
+        header("Location: ../inicioAdmin.php?page=docentes.php&success=1");
+        exit();        
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        die("Error al actualizar: " . $e->getMessage());
     }
-}else {
-        die('Método no permitido.');
-    }
-?>
+} else {
+    header("Location: ../inicioAdmin.php?page=docentes.php");
+    exit();
+}

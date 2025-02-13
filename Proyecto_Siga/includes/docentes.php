@@ -1,194 +1,200 @@
-<?php require_once __DIR__ . '/../crud/conexion.php';
- ?>
+<?php
+require __DIR__ . '/../crud/conexion.php';
+
+$sql = "SELECT d.ID_Docente, d.Nombre_Docente, d.Apellido_Docente, u.ID_Usuario, u.Correo
+        FROM Docente d 
+        INNER JOIN Usuario u ON d.ID_Usuario = u.ID_Usuario";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$docentes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-
-<?php
-$sql= "SELECT ID_Docente, Nombre_Docente, Apellido_Docente FROM Docente INNER JOIN Usuario ON Docente.ID_Usuario = Usuario.ID_Usuario WHERE Usuario.Estado=1";
-$stmt=$pdo->prepare($sql);
-$stmt->execute();
-$docentes=$stmt->fetchAll();
-?>
-
-
-
 <div class="container mt-4">
 <h1 class="text-center mb-4">Docentes Registrados en la Base de Datos </h1>
 
 <div class="text-end mb-3">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addDocenteModal">Agregar Docente</button>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearModal">Agregar Docente</button>
+    </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Correo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($docentes as $docente): ?>
+                    <tr>
+                        <td><?= $docente['ID_Docente'] ?></td>
+                        <td><?= $docente['Nombre_Docente'] ?></td>
+                        <td><?= $docente['Apellido_Docente'] ?></td>
+                        <td><?= $docente['Correo'] ?></td>
+                        <td>
+                            <button class="btn btn-primary" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editarModal" 
+                                data-id="<?= $docente['ID_Docente'] ?>" 
+                                data-nombre="<?= $docente['Nombre_Docente'] ?>" 
+                                data-apellido="<?= $docente['Apellido_Docente'] ?>" 
+                                data-correo="<?= $docente['Correo'] ?>"
+                                data-usuario="<?= $docente['ID_Usuario'] ?>">
+                                Editar
+                            </button>
+                            <button class="btn btn-danger" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#desactivarModal" 
+                                data-id="<?= $docente['ID_Docente'] ?>" 
+                                data-nombre="<?= $docente['Nombre_Docente'] ?>" 
+                                data-apellido="<?= $docente['Apellido_Docente'] ?>">
+                                Desactivar
+                            </button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID_Docente</th>
-            <th>Nombre_Docente</th>
-            <th>Apellido</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
-    <tbody>
-    <?php
-    if ($docentes){
-        foreach($docentes as $row){
-            echo "<tr>
-                <td>". $row["ID_Docente"] . "</td>
-                <td>". $row["Nombre_Docente"] . "</td>
-                <td>". $row["Apellido_Docente"] . "</td>
-                <td>
-                    <button class='btn btn-primary' 
-                        data-bs-toggle='modal' 
-                        data-bs-target='#editarModal' 
-                        data-id='" . $row['ID_Docente'] . "' 
-                        data-nombre='" . $row['Nombre_Docente'] . "' 
-                        data-apellido='" . $row['Apellido_Docente'] . "'>
-                        Editar
-                    </button>
-                    <button class='btn btn-danger'
-                    data-bs-toggle='modal'
-                    data-bs-target='#desactivarModal'
-                    data-id='".$row['ID_Docente']."'
-                    data-nombre='" .$row['Nombre_Docente'] ."'
-                    data-apellido='". $row['Apellido_Docente'] ."'> 
-                    Eliminar</button>
-                </td>
-            </tr>";
-        }
-    }else{
-        echo "<tr><td colspan='4'> No se encontraron docentes activos.</td></tr>";
-    }
-    ?>
-</tbody>
-
-<div class="modal fade" id="addDocenteModal" tabindex="-1" aria-labelledby="addDocenteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="../crud/crear_docente.php" method="POST">
+        <!-- Modal de Creación -->
+        <div class="modal fade" id="crearModal" tabindex="-1" aria-labelledby="crearModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addDocenteModalLabel">Agregar Nuevo Docente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Agregar Docente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombreDocente" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombreDocente" name="nombreDocente" required>
+                <form action="/Siga2823506/Proyecto_Siga/crud/crear_docente.php" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Apellido</label>
+                            <input type="text" class="form-control" name="apellido" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Correo</label>
+                            <input type="email" class="form-control" name="correo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Contraseña</label>
+                            <input type="password" class="form-control" name="contrasena" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="apellidoDocente" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" id="apellidoDocente" name="apellidoDocente" required>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar</button>
                     </div>
-                    <div class="mb-3">
-                        <label for="correoDocente" class="form-label">Correo</label>
-                        <input type="text" class="form-control" id="correoDocente" name="correoDocente" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contrasenaDocente" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="contrasenaDocente" name="contrasenaDocente" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Modal para Editar Docente -->
-<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="crud/editar_docente.php" method="POST">
+    <!-- Modal de Edición -->
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editarModalLabel">Editar Docente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Editar Docente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="editar-id">
-                    <div class="mb-3">
-                        <label for="editar-nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="editar-nombre" id="editar-nombre" required>
+                <form action="/Siga2823506/Proyecto_Siga/crud/editar_docente.php" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" id="editar-id" name="editar-id">
+                        <input type="hidden" id="editar-usuario" name="editar-usuario">
+
+                        <div class="mb-3">
+                            <label>Nombre</label>
+                            <input type="text" class="form-control" id="editar-nombre" name="editar-nombre" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Apellido</label>
+                            <input type="text" class="form-control" id="editar-apellido" name="editar-apellido" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Correo</label>
+                            <input type="email" class="form-control" id="editar-correo" name="editar-correo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Nueva Contraseña (Opcional)</label>
+                            <input type="password" class="form-control" id="editar-password" name="editar-password">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="editar-apellido" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" name="editar-apellido" id="editar-apellido" required>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Modal para cambiar el estado de un docente -->
-<div class="modal fade" id="desactivarModal" tabindex="-1" aria-labelledby="desactivarModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="crud/desactivar_docente.php" method="POST">
+    <!-- Modal de Desactivación -->
+    <div class="modal fade" id="desactivarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="desactivarModalLabel">Eliminar Docente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Desactivar Docente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="desactivar-id">
-                    <p>¿Estás seguro de que deseas eliminar este docente?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                </div>
-            </form>
+                <form action="/Siga2823506/Proyecto_Siga/crud/desactivar_docente.php" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" id="desactivar-id" name="id">
+                        <p>¿Seguro que deseas desactivar a <b id="desactivar-nombre-completo"></b>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Desactivar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-</div>
-
-<script>
-    var editarModal = document.getElementById('editarModal');
+    <script>
+var editarModal = document.getElementById('editarModal');
+if (editarModal) {
     editarModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Botón que abrió el modal
-        var id = button.getAttribute('data-id');
-        var nombre = button.getAttribute('data-nombre');
-        var apellido = button.getAttribute('data-apellido');
-
-        // Pasar los datos al formulario
-        document.getElementById('editar-id').value = id;
-        document.getElementById('editar-nombre').value = nombre;
-        document.getElementById('editar-apellido').value = apellido;
+        var button = event.relatedTarget;
+        document.getElementById('editar-id').value = button.getAttribute('data-id');
+        document.getElementById('editar-usuario').value = button.getAttribute('data-usuario');
+        document.getElementById('editar-nombre').value = button.getAttribute('data-nombre');
+        document.getElementById('editar-apellido').value = button.getAttribute('data-apellido');
+        document.getElementById('editar-correo').value = button.getAttribute('data-correo');
     });
-</script>
+}
 
-<script>
 var desactivarModal = document.getElementById('desactivarModal');
-desactivarModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget; // Botón que abrió el modal
-    var id = button.getAttribute('data-id');
-    var nombre = button.getAttribute('data-nombre');
-    var apellido = button.getAttribute('data-apellido');
+if (desactivarModal) { // Verifica que el modal exista antes de asignarle el evento
+    desactivarModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        if (!button) return; // Evita errores si no hay botón de activación
+        
+        var nombre = button.getAttribute('data-nombre') || '';
+        var apellido = button.getAttribute('data-apellido') || '';
+        var id = button.getAttribute('data-id') || '';
 
-    // Pasar los datos al formulario
-    document.getElementById('desactivar-id').value = id;
-    document.getElementById('desactivar-nombre').value = nombre;
-    document.getElementById('desactivar-apellido').value = apellido;
+        // Asignar valores al modal
+        document.getElementById('desactivar-id').value = id;
+        document.getElementById('desactivar-nombre-completo').innerText = nombre + ' ' + apellido;
     });
-</script>
+}
+    </script>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
