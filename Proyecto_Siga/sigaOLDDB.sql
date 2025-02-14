@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-02-2025 a las 16:34:41
+-- Tiempo de generación: 11-12-2024 a las 23:58:45
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -131,16 +131,17 @@ CREATE TABLE `docente` (
   `id_docente` int(5) NOT NULL,
   `nombre_docente` varchar(40) NOT NULL,
   `apellido_docente` varchar(40) NOT NULL,
-  `id_usuario` int(11) NOT NULL
+  `id_usuario` int(11) NOT NULL,
+  `Contraseña_Docente` varchar(255) DEFAULT NULL,
+  `Correo_Docente` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `docente`
 --
 
-INSERT INTO `docente` (`id_docente`, `nombre_docente`, `apellido_docente`, `id_usuario`) VALUES
-(1, 'Edwin', 'Casallas', 1),
-(2, 'Maria', 'Suarez', 2);
+INSERT INTO `docente` (`id_docente`, `nombre_docente`, `apellido_docente`, `id_usuario`, `Contraseña_Docente`, `Correo_Docente`) VALUES
+(15, 'Maria', 'Angelica', 19, '$2y$10$s92cKuUUjM.0prNmYHLzbeNIJ0MU5OdA1rHSjv6ZNpCxdchvhL0va', 'hola@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -225,18 +226,17 @@ INSERT INTO `rol` (`id_rol`, `nombre_rol`, `Permisos`) VALUES
 CREATE TABLE `usuario` (
   `id_usuario` int(5) NOT NULL,
   `id_rol` int(5) NOT NULL,
-  `estado` tinyint(1) NOT NULL,
-  `Correo` varchar(255) DEFAULT NULL,
-  `Contraseña` varchar(255) DEFAULT NULL
+  `estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `id_rol`, `estado`, `Correo`, `Contraseña`) VALUES
-(1, 2, 1, 'edwincasallas57@gmail.com', '$2y$10$p0hpz63S31uGcXnePKQnseBwKBQLkIRxOHux2W/iiMvY0WeaFeIUq'),
-(2, 2, 1, 'hola@gmail.com', '$2y$10$vt6LjLXpBGqtf.28jeyhNuXkVNRXvPSp8C.uN6wS0CztA5mRc4PR.');
+INSERT INTO `usuario` (`id_usuario`, `id_rol`, `estado`) VALUES
+(17, 2, 1),
+(18, 2, 1),
+(19, 2, 1);
 
 --
 -- Índices para tablas volcadas
@@ -392,7 +392,7 @@ ALTER TABLE `curso`
 -- AUTO_INCREMENT de la tabla `docente`
 --
 ALTER TABLE `docente`
-  MODIFY `id_docente` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_docente` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `estudiante`
@@ -422,7 +422,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_usuario` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restricciones para tablas volcadas
