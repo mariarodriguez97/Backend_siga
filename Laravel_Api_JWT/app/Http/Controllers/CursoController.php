@@ -2,138 +2,131 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Rol;
+use App\Models\Curso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RolController extends Controller
+class CursoController extends Controller
 {
     public function registrar(Request $request)
     {
         // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|unique:roles,nombre',
-            'permisos' => 'nullable|array', // Permisos opcionales que debemos investigar como carajo se llenan.
+            'nombre' => 'required|string|unique:cursos,nombre',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        // Crear el rol
-        $rol = Rol::create([
+        // Crear el curso
+        $curso = Curso::create([
             'nombre' => $request->nombre,
-            'permisos' => $request->permisos, // Para almacenar los permisos
         ]);
 
-        return response()->json(['mensaje' => 'Rol registrado con éxito', 'rol' => $rol], 201);
+        return response()->json(['mensaje' => 'Curso registrado con éxito', 'curso' => $curso], 201);
+    }
+
+    public function index() {
+        $cursos = Curso::all();
+        
+        $data = [
+            'cursos' => $cursos,
+            'status' => 200
+        ];
+        
+        return response()->json($data,200);
+    }
+    public function update(Request $request, $id) {
+        $curso = Curso::find($id);
+    
+        if (!$curso) {
+            $data = [
+                'mensaje' => 'Curso no encontrado',
+                'status' => 404
+            ];
+            return response()->json($data, 404);
+        }
+    
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|unique:cursos,nombre,' . $curso->id,
+        ]);
+    
+        if ($validator->fails()) {
+            $data = [
+                'mensaje' => 'Error al actualizar el curso',
+                'error' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+    
+        $curso->nombre = $request->nombre;
+        $curso->save();
+    
+        $data = [
+            'mensaje' => 'Curso actualizado con exito',
+            'curso' => $curso,
+            'status' => 200
+        ];
+        return response()->json($data, 200);
     }
     
-    public function index() {
-        $roles = Rol::all();
-
-        $data = [
-            'roles' => $roles,
-            'status' => 200
-        ];
-
-        return response()->json($data,200);
-}
-    public function update(Request $request, $id) {
-        $rol = Rol::find($id);
-
-        if (!$rol) {
-            $data = [
-                'mensaje' => 'Rol no encontrado',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-        $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|unique:roles,nombre,' . $rol->id,
-            'permisos' => 'nullable|array',
-        ]);
-
-        if ($validator->fails()) {
-            
-            $data = [
-                'mensaje' => 'Error al actualizar el rol',
-                'error' => $validator->errors(),
-                'status' => 400
-            ];
-            return response()->json($data, 400);
-        }
-
-        $rol->nombre = $request->nombre;
-        $rol->permisos = $request->permisos;
-        $rol->save();
-
-        $data = [
-            'mensaje' => 'Rol actualizado con exito',
-            'rol' => $rol,
-            'status' => 200
-        ];
-        return response()->json($data, 200);
-}
     public function updatePartial(Request $request, $id) {
-        $rol = Rol::find($id);
-
-        if (!$rol) {
+        $curso = Curso::find($id);
+    
+        if (!$curso) {
             $data = [
-                'mensaje' => 'Rol no encontrado',
+                'mensaje' => 'Curso no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
-
+    
         $validator = Validator::make($request->all(), [
             'nombre' => 'string',
-            'permisos' => 'array',
         ]);
-
+    
         if ($validator->fails()) {
             $data = [
-                'mensaje' => 'Error al actualizar el rol',
+                'mensaje' => 'Error al actualizar el curso',
                 'error' => $validator->errors(),
                 'status' => 400
             ];
             return response()->json($data, 400);
         }
-
+    
         if ($request->has('nombre')) {
-            $rol->nombre = $request->nombre;
+            $curso->nombre = $request->nombre;
         }
-
-        if ($request->has('permisos')) {
-            $rol->permisos = $request->permisos;    
-        }
-
-        $rol->save();
-
+    
+        $curso->save();
+    
         $data = [
-            'mensaje' => 'Rol actualizado con exito',
-            'rol' => $rol,
+            'mensaje' => 'Curso actualizado con exito',
+            'curso' => $curso,
             'status' => 200
         ];
         return response()->json($data, 200);
     }
+    
     public function destroy($id) {
-        $rol = Rol::find($id);
-
-        if (!$rol) {
+        $curso = Curso::find($id);
+    
+        if (!$curso) {
             $data = [
-                'mensaje' => 'Rol no encontrado',
+                'mensaje' => 'Curso no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
-
-        $rol->delete();
-
+    
+        $curso->delete();
+    
         $data = [
-            'mensaje' => 'Rol eliminado con exito',
+            'mensaje' => 'Curso eliminado con exito',
             'status' => 200
         ];
         return response()->json($data, 200);
-    }
+    }   
 }

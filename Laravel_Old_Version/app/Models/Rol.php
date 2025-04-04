@@ -12,12 +12,8 @@ class Rol extends Model
     use HasFactory, Notifiable;
     protected $table = 'roles';
 
-    protected $fillable = ['nombre','permisos'];
-    protected $casts = ['permisos' => 'array',];
-
-    public function usuarios()
-    {
-    return $this->hasMany(Usuario::class);
-    }
+    protected $fillable = [
+        'nombre_rol',
+        'permisos',
+    ];
 }
-

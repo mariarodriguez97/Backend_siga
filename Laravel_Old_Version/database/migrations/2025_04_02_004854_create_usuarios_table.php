@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rol_id')->constrained('roles');  // Corregido 'id_rol' por 'rol_id'
-            $table->integer('estado');  
-            $table->string('correo');  
-            $table->string('password');
+            $table->unsignedBigInteger('id_rol');  // Usamos 'id_rol' como la columna para la llave foránea
+            $table->integer('estado');  // Corregido 'integrer' por 'integer'
+            $table->string('correo')->unique();  // Corregido 'corrreo' por 'correo'
+            $table->string('contraseña');
             $table->timestamps();
 
+            // Aquí se corrige la relación de la clave foránea
+            $table->foreign('id_rol')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 
