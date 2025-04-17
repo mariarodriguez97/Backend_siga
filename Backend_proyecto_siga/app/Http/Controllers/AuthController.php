@@ -28,7 +28,7 @@ class AuthController extends Controller
         'correo' => $request->correo,
         'password' => Hash::make($request->password),
         'estado' => 1,
-        'rol_id' => $request->rol_id, // ahora sí lo pedimos y guardamos
+        'rol_id' => $request->rol_id,
     ]);
 
     return response()->json(['mensaje' => 'Usuario registrado con éxito', 'usuario' => $usuario], 201);
