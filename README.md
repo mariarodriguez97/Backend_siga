@@ -16,9 +16,3 @@ Este repositorio contiene el código del backend del sistema **SIGA** (Sistema I
 - `controllers/`
 - `models/`
 
-## 🚀 Cómo ejecutar
-
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/mariarodriguez97/Siga2823506.git
-   cd backend_proyecto_siga
